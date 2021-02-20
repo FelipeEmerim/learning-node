@@ -1,0 +1,12 @@
+root: true
+parserOptions:
+  project: 'package.json'
+extends:
+  - airbnb-typescript
+  - airbnb-typescript-prettier
+parser: '@typescript-eslint/parser'
+plugins:
+  - '@typescript-eslint'
+rules:
+  '@typescript-eslint/ban-types': 0
+  import/prefer-default-export: 0
