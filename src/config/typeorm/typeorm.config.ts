@@ -11,8 +11,8 @@ export const typeormConfig: TypeOrmModuleOptions = {
   database: env.DB_DATABASE,
   entities: typeOrmEntities,
   synchronize: false,
-  migrations: ['migrations/*{.ts,.js}'],
+  migrations: ['dist/migrations/*{.ts,.js}'],
   cli: {
-    migrationsDir: 'migrations',
+    migrationsDir: 'src/migrations',
   },
 };
