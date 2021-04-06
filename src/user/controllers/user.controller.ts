@@ -9,11 +9,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { TransformPlainToClass } from 'class-transformer';
+import { TransformClassToPlain, TransformPlainToClass } from 'class-transformer';
 import { IdSchema } from '../../shared/schemas/id.schema';
 import User from '../entities/user.entity';
 import { UserService } from '../providers/user.service';
 import { UserOutputSchema } from '../schemas/user-output.schema';
+import { UserUpdateSchema } from '../schemas/user-update-schema';
 import { UserSchema } from '../schemas/user.schema';
 
 @Controller('user')
@@ -30,7 +31,7 @@ export class UserController {
   @Post()
   @TransformPlainToClass(UserOutputSchema)
   post(@Body() user: UserSchema): Promise<User> {
-    return this.userService.save(user);
+    return this.userService.create(user);
   }
 
   @Get(':id')
@@ -41,8 +42,14 @@ export class UserController {
 
   @Put(':id')
   @TransformPlainToClass(UserOutputSchema)
-  put(@Param() params: IdSchema, @Body() user: UserSchema): Promise<User> {
-    return this.userService.update(params.id, user);
+  put(
+    @Param() params: IdSchema,
+    @Body() userUpdateSchema: UserUpdateSchema,
+  ): Promise<User> {
+    const user = userUpdateSchema;
+
+    user.id = params.id;
+    return this.userService.update(user);
   }
 
   @Delete(':id')

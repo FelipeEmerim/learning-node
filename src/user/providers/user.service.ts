@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import User from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
+import { UserUpdateSchema } from '../schemas/user-update-schema';
 import { UserSchema } from '../schemas/user.schema';
+import env from '../../app.env';
 
 @Injectable()
 export class UserService {
@@ -12,18 +15,20 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  save(userSchema: UserSchema): Promise<User> {
-    return this.usersRepository.save(userSchema);
+  async create(userSchema: UserSchema): Promise<User> {
+    const user = userSchema;
+
+    user.password = await bcrypt.hash(user.password, env.SALT);
+    return this.usersRepository.save(user);
   }
 
-  async update(id: number, userSchema: UserSchema): Promise<User> {
-    const user = await this.findOne(id);
-    user.firstName = userSchema.firstName ?? user.firstName;
-    user.lastName = userSchema.lastName ?? user.lastName;
-    user.isActive = userSchema.isActive ?? user.isActive;
-    user.password = userSchema.password ?? user.password;
+  async update(userUpdateSchema: UserUpdateSchema): Promise<User> {
+    const user = await this.findOne(userUpdateSchema.id);
+    user.firstName = userUpdateSchema.firstName ?? user.firstName;
+    user.lastName = userUpdateSchema.lastName ?? user.lastName;
+    user.isActive = userUpdateSchema.isActive ?? user.isActive;
 
-    return this.save(user);
+    return this.usersRepository.save(user);
   }
 
   findOne(id: number): Promise<User> {

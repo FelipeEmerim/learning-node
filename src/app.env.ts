@@ -10,6 +10,7 @@ const env = {
   DB_DATABASE: process.env.DB_DATABASE ?? null,
   HOST: process.env.HOST ?? '0.0.0.0',
   PORT: process.env.PORT ?? 3000,
+  SALT: parseInt(process.env.SALT, 10) ?? 10,
 };
 
 export default env;

@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express/interfaces';
 import env from './app.env';
@@ -9,9 +9,10 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
       transform: true,
-      errorHttpStatusCode: 422,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     }),
   );
 

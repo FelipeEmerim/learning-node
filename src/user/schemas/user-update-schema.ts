@@ -1,6 +1,8 @@
 import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 
-export class UserSchema {
+export class UserUpdateSchema {
+  id: number;
+
   @IsString()
   @Length(5, 100)
   firstName: string;
@@ -8,10 +10,6 @@ export class UserSchema {
   @IsString()
   @Length(5, 100)
   lastName: string;
-
-  @IsString()
-  @Length(5, 500)
-  password: string;
 
   @IsBoolean()
   @IsOptional()

@@ -2,13 +2,13 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export class createUserTable1613925849940 implements MigrationInterface {
-  name = 'createUserTable1613925849940';
+export class createUsersTable1613925849940 implements MigrationInterface {
+  name = 'createUsersTable1613925849940';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'user',
+        name: 'users',
         columns: [
           {
             name: 'id',
@@ -41,6 +41,6 @@ export class createUserTable1613925849940 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('user');
+    await queryRunner.dropTable('users');
   }
 }
