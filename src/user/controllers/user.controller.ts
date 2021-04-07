@@ -9,7 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { TransformClassToPlain, TransformPlainToClass } from 'class-transformer';
+import { TransformPlainToClass } from 'class-transformer';
 import { IdSchema } from '../../shared/schemas/id.schema';
 import User from '../entities/user.entity';
 import { UserService } from '../providers/user.service';
