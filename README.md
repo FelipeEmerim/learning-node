@@ -74,7 +74,7 @@ docker-compose run --rm node npm run migration:generate
 docker-compose run --rm node npm run migration:run
 
 # revert migrations
-npm run migration:revert
+docker-compose run --rm npm run migration:revert
 
 ```
 
@@ -82,8 +82,10 @@ npm run migration:revert
 
 ```bash
 
+# Run lint on whole project
 docker-compose run --rm node npm run lint
 
+# Run lint on migrations dir. This always runs after the migration:create/generate command
 docker-compose run --rm node npm run migration:lint
 
 ```
