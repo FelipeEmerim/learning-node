@@ -4,11 +4,11 @@ import { typeOrmEntities } from './typeorm.definitions';
 
 export const typeormConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: env.DB_HOST,
+  host: env.DB_HOST as string,
   port: env.DB_PORT,
-  username: env.DB_USERNAME,
-  password: env.DB_PASSWORD,
-  database: env.DB_DATABASE,
+  username: env.DB_USERNAME as string,
+  password: env.DB_PASSWORD as string,
+  database: env.DB_DATABASE as string,
   entities: typeOrmEntities,
   synchronize: false,
   migrations: ['migrations/*{.ts,.js}'],
