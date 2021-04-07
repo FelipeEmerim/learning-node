@@ -29,7 +29,7 @@
 ## Installation
 
 ```bash
-$ npm install
+docker-compose run --rm node npm install
 ```
 
 ## Running the app
@@ -38,26 +38,26 @@ Copy the .env.example file and fill the appropriate values.
 
 ```bash
 # development
-npm run start
+docker-compose run --rm node npm run start
 
 # watch mode
-npm run start:dev
+docker-compose run --rm node npm run start:dev
 
 # production mode
-npm run start:prod
+docker-compose run --rm node npm run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-npm run test
+docker-compose run --rm node npm run test
 
 # e2e tests
-npm run test:e2e
+docker-compose run --rm node npm run test:e2e
 
 # test coverage
-npm run test:cov
+docker-compose run --rm node npm run test:cov
 ```
 
 ## Migrations
@@ -65,13 +65,13 @@ npm run test:cov
 ```bash
 
 # create empty migration
-npm run migration:create
+docker-compose run --rm node npm run migration:create
 
 # generate migration
-npm run migration:generate
+docker-compose run --rm node npm run migration:generate
 
 # run migration
-npm run migration:run
+docker-compose run --rm node npm run migration:run
 
 # revert migrations
 npm run migration:revert
@@ -82,9 +82,9 @@ npm run migration:revert
 
 ```bash
 
-npm run lint
+docker-compose run --rm node npm run lint
 
-npm run migration:lint
+docker-compose run --rm node npm run migration:lint
 
 ```
 
