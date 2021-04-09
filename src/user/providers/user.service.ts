@@ -1,6 +1,7 @@
-import { Injectable, Inject, LoggerService } from '@nestjs/common';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Injectable, Inject } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as bcrypt from 'bcrypt';
+import { Logger } from 'winston';
 import User from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
@@ -12,14 +13,17 @@ export class UserService {
   // eslint-disable-next-line no-useless-constructor
   constructor(
     protected usersRepository: UserRepository,
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
-    private readonly logger: LoggerService,
+    @Inject(WINSTON_MODULE_PROVIDER)
+    private readonly logger: Logger,
   ) {}
 
   async findAll(): Promise<User[]> {
     const users: User[] = await this.usersRepository.find();
 
-    this.logger.log('Retrieved users list', UserService.name);
+    this.logger.log('Retrieved users list', {
+      context: UserService.name,
+      tags: ['user', 'list', 'service'],
+    });
 
     return users;
   }
@@ -29,7 +33,10 @@ export class UserService {
 
     user.password = await bcrypt.hash(user.password, env.SALT);
     const savedUser = await this.usersRepository.save(user);
-    this.logger.log(`User saved: ${savedUser.id}`, UserService.name);
+    this.logger.info(`User saved: ${savedUser.id}`, {
+      context: UserService.name,
+      tags: ['user', 'create'],
+    });
 
     return savedUser;
   }
@@ -41,7 +48,10 @@ export class UserService {
     user.isActive = userUpdateSchema.isActive ?? user.isActive;
     const savedUser = await this.usersRepository.save(user);
 
-    this.logger.log(`User updated: ${savedUser.id}`, UserService.name);
+    this.logger.info(`User updated: ${savedUser.id}`, {
+      context: UserService.name,
+      tags: ['user', 'update'],
+    });
 
     return savedUser;
   }
@@ -49,7 +59,10 @@ export class UserService {
   async findOne(id: number): Promise<User> {
     const user: User = await this.usersRepository.findOneOrFail(id);
 
-    this.logger.log(`Retrieved user: ${user.id}`, UserService.name);
+    this.logger.info(`Retrieved user: ${user.id}`, {
+      context: UserService.name,
+      tags: ['user', 'getById'],
+    });
 
     return user;
   }
@@ -58,6 +71,9 @@ export class UserService {
     await this.findOne(id);
     await this.usersRepository.delete(id);
 
-    this.logger.log(`User deleted: ${id}`, UserService.name);
+    this.logger.info(`User deleted: ${id}`, {
+      context: UserService.name,
+      tags: ['user', 'delete'],
+    });
   }
 }
