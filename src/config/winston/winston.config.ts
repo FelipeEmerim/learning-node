@@ -41,15 +41,16 @@ if (env.LOG_FILE_ACTIVE) {
 if (env.LOG_ES_ACTIVE) {
   const elasticsearchClientOptions: ClientOptions = {
     auth: {
-      apiKey: env.ES_API_KEY,
+      apiKey: env.LOG_ES_API_KEY,
     },
-    node: env.ES_NODE_URL,
+    node: env.LOG_ES_NODE_URL,
   };
 
   const elasticsearchLoggerOptions: ElasticsearchTransportOptions = {
     apm,
     level: env.LOG_ES_LEVEL,
     client: new Client(elasticsearchClientOptions),
+    indexPrefix: env.LOG_ES_INDEX_PREFIX,
   };
 
   winstonTrasports.push(new ElasticsearchTransport(elasticsearchLoggerOptions));
