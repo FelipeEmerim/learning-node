@@ -14,7 +14,7 @@ import { IdSchema } from '../../shared/schemas/id.schema';
 import User from '../entities/user.entity';
 import { UserService } from '../providers/user.service';
 import { UserOutputSchema } from '../schemas/user-output.schema';
-import { UserUpdateSchema } from '../schemas/user-update-schema';
+import { UserUpdateSchema } from '../schemas/user-update.schema';
 import { UserSchema } from '../schemas/user.schema';
 
 @Controller('user')
