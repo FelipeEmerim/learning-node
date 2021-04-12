@@ -7,6 +7,7 @@ export class UserEntityHelper {
     user.firstName = 'Robert';
     user.lastName = 'Garcia';
     user.isActive = true;
+    user.password = '123456';
 
     return user;
   }
