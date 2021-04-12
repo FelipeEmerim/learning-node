@@ -4,16 +4,15 @@ import { assert } from 'chai';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as sinon from 'sinon';
 import * as bcrypt from 'bcrypt';
+import { plainToClass } from 'class-transformer';
+import { EntityNotFoundError } from 'typeorm';
 import { UserEntityHelper } from '../../../test/helpers/user/entites/user.entity.helper';
 import { UserRepository } from '../repositories/user.repository';
 import { UserService } from './user.service';
 import { UserSchemaHelper } from '../../../test/helpers/user/schemas/user.schema.helper';
 import env from '../../app.env';
-import { UserUpdateSchemaHelper } from 'test/helpers/user/schemas/user-update.schema.helper';
-import { plainToClass } from 'class-transformer';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
 import User from '../entities/user.entity';
-import { EntityNotFoundError } from 'typeorm';
 
 describe('User service', () => {
   const userRepository = sinon.createStubInstance(UserRepository);
