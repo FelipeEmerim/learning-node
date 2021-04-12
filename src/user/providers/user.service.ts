@@ -20,7 +20,7 @@ export class UserService {
   async findAll(): Promise<User[]> {
     const users: User[] = await this.usersRepository.find();
 
-    this.logger.log('Retrieved users list', {
+    this.logger.info('Retrieved users list', {
       context: UserService.name,
       tags: ['user', 'list', 'service'],
     });
