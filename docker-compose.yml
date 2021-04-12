@@ -38,52 +38,8 @@ services:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
-  elasticsearch:
-    restart: unless-stopped
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      discovery.type: "single-node"
-      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
-      xpack.monitoring.enabled: "true"
-      xpack.security.enabled: "false"
-    volumes:
-      - es-data:/usr/share/elasticsearch/data
-    networks:
-      - main
-
-  apm-server:
-    restart: unless-stopped
-    image: docker.elastic.co/apm/apm-server:7.12.0
-    networks:
-      - main
-    ports:
-    - 8200:8200
-    command: >
-      apm-server -e
-        -E apm-server.rum.enabled=true
-        -E setup.kibana.host=kibana:5601
-        -E setup.template.settings.index.number_of_replicas=0
-        -E apm-server.kibana.enabled=true
-        -E apm-server.kibana.host=kibana:5601
-        -E output.elasticsearch.hosts=["elasticsearch:9200"]
-  kibana:
-    restart: unless-stopped
-    image: docker.elastic.co/kibana/kibana:7.12.0
-    ports:
-      - "5601:5601"
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-    networks:
-      - main
-
-
 volumes:
   db-data:
-    driver: local
-  es-data:
     driver: local
 
 networks:

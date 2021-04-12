@@ -10,3 +10,10 @@ plugins:
 rules:
   '@typescript-eslint/ban-types': 0
   import/prefer-default-export: 0
+  import/no-extraneous-dependencies:
+  - error
+  - devDependencies:
+    - "**/*.test.ts"
+    - "**/*.spec.ts"
+    - "**/*.test.tsx"
+    - "**/*.spec.tsx"
