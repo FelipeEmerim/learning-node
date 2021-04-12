@@ -5,7 +5,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import env from './app.env';
 import { AppModule } from './app.module';
 import { EntityNotFoundFilter } from './shared/filters/entity-not-found.filter';
-import { classValidatorConfigs } from './config/class-validator';
+import classValidatorConfigs from './config/class-validator/validation.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
