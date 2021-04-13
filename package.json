@@ -17,7 +17,7 @@
     "test": "jest",
     "test:watch": "node --inspect-brk=0.0.0.0 -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --watch --runInBand",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk=0.0.0.0 -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest",
+    "test:debug": "node --inspect-brk=0.0.0.0 -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -f ./ormconfig.migrations.ts",
     "migration:generate": "npm run typeorm:cli -- migration:generate -n",
@@ -35,7 +35,7 @@
     "@nestjs/core": "^7.6.15",
     "@nestjs/platform-express": "^7.6.15",
     "@nestjs/typeorm": "^7.1.5",
-    "@types/bcrypt": "^3.0.0",
+    "@types/bcrypt": "^3.0.1",
     "@types/sinon": "^9.0.11",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
@@ -66,10 +66,10 @@
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
     "@types/supertest": "^2.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
-    "@typescript-eslint/parser": "^4.21.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "chai": "^4.3.4",
-    "eslint": "^7.23.0",
+    "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-airbnb-typescript-prettier": "^4.2.0",
@@ -84,7 +84,7 @@
     "ts-loader": "^8.1.0",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.4"
   },
   "jest": {
     "moduleFileExtensions": [

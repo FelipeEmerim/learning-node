@@ -2,9 +2,15 @@ import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import { assert } from 'chai';
 import * as sinon from 'sinon';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  HttpStatus,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { plainToClass } from 'class-transformer';
+import * as request from 'supertest';
 import { EntityNotFoundFilter } from '../../shared/filters/entity-not-found.filter';
 import { UserEntityHelper } from '../../../test/helpers/user/entites/user.entity.helper';
 import { UserService } from '../providers/user.service';
@@ -14,9 +20,12 @@ import classValidatorConfigs from '../../config/class-validator/validation.confi
 import { UserSchema } from '../schemas/user.schema';
 import { IdSchema } from '../../shared/schemas/id.schema';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
+import { EntityNotFoundError } from 'typeorm';
+import User from '../entities/user.entity';
 
-describe('User service', () => {
+describe('User controller', () => {
   const userService = sinon.createStubInstance(UserService);
+  let app: INestApplication;
   let userController: UserController;
 
   beforeEach(async () => {
@@ -30,7 +39,7 @@ describe('User service', () => {
       ],
     }).compile();
 
-    const app = module.createNestApplication();
+    app = module.createNestApplication();
 
     app.useGlobalPipes(new ValidationPipe(classValidatorConfigs));
 
@@ -54,19 +63,24 @@ describe('User service', () => {
 
     userService.findAll.resolves(expected);
 
-    const result = await userController.list();
+    return request(app.getHttpServer())
+      .get('/user')
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.OK);
+        const { body } = response;
 
-    assert.lengthOf(result, 1);
+        assert.isArray(body);
+        assert.lengthOf(body, 1);
 
-    const resultUser = result[0];
+        const resultUser = body[0];
 
-    assert.instanceOf(resultUser, UserOutputSchema);
-
-    sinon.assert.calledOnce(userService.findAll);
-    assert.equal(resultUser.firstName, user.firstName);
-    assert.equal(resultUser.lastName, user.lastName);
-    assert.equal(resultUser.isActive, user.isActive);
-    assert.isUndefined(resultUser.password);
+        sinon.assert.calledOnce(userService.findAll);
+        assert.equal(resultUser.id, user.id);
+        assert.equal(resultUser.firstName, user.firstName);
+        assert.equal(resultUser.lastName, user.lastName);
+        assert.equal(resultUser.isActive, user.isActive);
+        assert.isUndefined(resultUser.password);
+      });
   });
 
   it('Should create a user', async () => {
@@ -76,15 +90,37 @@ describe('User service', () => {
 
     userService.create.resolves(expected);
 
-    const result = await userController.post(userSchema);
+    return request(app.getHttpServer())
+      .post('/user')
+      .send(userSchema)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.CREATED);
+        const { body } = response;
 
-    assert.instanceOf(result, UserOutputSchema);
+        sinon.assert.calledWith(userService.create, userSchema);
+        assert.equal(body.id, user.id);
+        assert.equal(body.firstName, user.firstName);
+        assert.equal(body.lastName, user.lastName);
+        assert.equal(body.isActive, user.isActive);
+        assert.isUndefined(body.password);
+      });
+  });
 
-    sinon.assert.calledWith(userService.create, userSchema);
-    assert.equal(result.firstName, user.firstName);
-    assert.equal(result.lastName, user.lastName);
-    assert.equal(result.isActive, user.isActive);
-    assert.isUndefined(result.password);
+  it('Should not create an user, invalid data supplied', async () => {
+    const user = UserEntityHelper.createEntity();
+    const expected = user;
+
+    userService.create.resolves(expected);
+
+    return request(app.getHttpServer())
+      .post('/user')
+      .send({})
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.equal(response.body.statusCode, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.isArray(response.body.message);
+        sinon.assert.notCalled(userService.create);
+      });
   });
 
   it('Should find a user by id', async () => {
@@ -94,36 +130,93 @@ describe('User service', () => {
 
     userService.findOne.resolves(expected);
 
-    const result = await userController.get(idSchema);
+    return request(app.getHttpServer())
+      .get(`/user/${idSchema.id}`)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.OK);
+        const resultUser = response.body;
 
-    assert.instanceOf(result, UserOutputSchema);
+        sinon.assert.calledOnceWithExactly(userService.findOne, idSchema.id);
+        assert.equal(resultUser.id, user.id);
+        assert.equal(resultUser.firstName, user.firstName);
+        assert.equal(resultUser.lastName, user.lastName);
+        assert.equal(resultUser.isActive, user.isActive);
+        assert.isUndefined(resultUser.password);
+      });
+  });
 
-    sinon.assert.calledWith(userService.findOne, user.id);
-    assert.equal(result.firstName, user.firstName);
-    assert.equal(result.lastName, user.lastName);
-    assert.equal(result.isActive, user.isActive);
-    assert.isUndefined(result.password);
+  it('Should find a user by id but not found', async () => {
+    const user = UserEntityHelper.createEntity();
+    const idSchema: IdSchema = plainToClass(IdSchema, user);
+
+    userService.findOne.throws(new EntityNotFoundError(User, idSchema.id));
+
+    return request(app.getHttpServer())
+      .get(`/user/${idSchema.id}`)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.status, HttpStatus.NOT_FOUND);
+        assert.isDefined(response.body.message);
+        sinon.assert.calledOnceWithExactly(userService.findOne, idSchema.id);
+      });
   });
 
   it('Should update a user by id', async () => {
     const user = UserEntityHelper.createEntity();
     const idSchema: IdSchema = plainToClass(IdSchema, user);
     const userSchema: UserUpdateSchema = plainToClass(UserUpdateSchema, user);
-    userSchema.id = 0;
-    const expected = user;
+    userSchema.id = idSchema.id;
 
-    userService.update.resolves(expected);
+    userService.update.resolves(user);
 
-    const result = await userController.put(idSchema, userSchema);
+    return request(app.getHttpServer())
+      .put(`/user/${idSchema.id}`)
+      .send(userSchema)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.OK);
+        const resultUser = response.body;
 
-    assert.instanceOf(result, UserOutputSchema);
+        sinon.assert.calledOnceWithExactly(userService.update, userSchema);
+        assert.equal(resultUser.id, user.id);
+        assert.equal(resultUser.firstName, user.firstName);
+        assert.equal(resultUser.lastName, user.lastName);
+        assert.equal(resultUser.isActive, user.isActive);
+        assert.isUndefined(resultUser.password);
+      });
+  });
 
-    sinon.assert.calledWith(userService.update, userSchema);
-    assert.equal(result.firstName, user.firstName);
-    assert.equal(result.lastName, user.lastName);
-    assert.equal(result.isActive, user.isActive);
-    assert.equal(userSchema.id, idSchema.id);
-    assert.isUndefined(result.password);
+  it('Should not update a user by id because not found', async () => {
+    const user = UserEntityHelper.createEntity();
+    const idSchema: IdSchema = plainToClass(IdSchema, user);
+    const userSchema: UserUpdateSchema = plainToClass(UserUpdateSchema, user);
+    userSchema.id = idSchema.id;
+
+    userService.update.throws(new EntityNotFoundError(User, idSchema.id));
+
+    return request(app.getHttpServer())
+      .put(`/user/${idSchema.id}`)
+      .send(userSchema)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.status, HttpStatus.NOT_FOUND);
+        assert.isDefined(response.body.message);
+        sinon.assert.calledOnceWithExactly(userService.update, userSchema);
+      });
+  });
+
+  it('Should not update a user by id because invalid data', async () => {
+    const user = UserEntityHelper.createEntity();
+    const idSchema: IdSchema = plainToClass(IdSchema, user);
+
+    return request(app.getHttpServer())
+      .put(`/user/${idSchema.id}`)
+      .send({})
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.equal(response.body.statusCode, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.isArray(response.body.message);
+        sinon.assert.notCalled(userService.update);
+      });
   });
 
   it('Should delete a user by id', async () => {
@@ -132,9 +225,29 @@ describe('User service', () => {
 
     userService.delete.resolves();
 
-    const result = await userController.delete(idSchema);
-    assert.isUndefined(result);
+    return request(app.getHttpServer())
+      .delete(`/user/${idSchema.id}`)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.NO_CONTENT);
+        assert.isObject(response.body);
+        assert.isEmpty(response.body);
+        sinon.assert.calledOnceWithExactly(userService.delete, idSchema.id);
+      });
+  });
 
-    sinon.assert.calledWith(userService.delete, user.id);
+  it('Should delete a user by id', async () => {
+    const user = UserEntityHelper.createEntity();
+    const idSchema: IdSchema = plainToClass(IdSchema, user);
+
+    userService.delete.throws(new EntityNotFoundError(User, idSchema.id));
+
+    return request(app.getHttpServer())
+      .delete(`/user/${idSchema.id}`)
+      .then((response) => {
+        assert.equal(response.status, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.status, HttpStatus.NOT_FOUND);
+        assert.isDefined(response.body.message);
+        sinon.assert.calledOnceWithExactly(userService.delete, idSchema.id);
+      });
   });
 });
