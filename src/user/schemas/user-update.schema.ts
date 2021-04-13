@@ -19,5 +19,5 @@ export class UserUpdateSchema {
   @IsBoolean()
   @IsOptional()
   @Expose()
-  isActive: boolean;
+  isActive = true;
 }

@@ -9,6 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { TransformPlainToClass } from 'class-transformer';
 import { IdSchema } from '../../shared/schemas/id.schema';
 import User from '../entities/user.entity';
@@ -18,6 +19,7 @@ import { UserUpdateSchema } from '../schemas/user-update.schema';
 import { UserSchema } from '../schemas/user.schema';
 
 @Controller('user')
+@ApiTags('User')
 export class UserController {
   // eslint-disable-next-line no-useless-constructor
   constructor(protected userService: UserService) {}

@@ -21,5 +21,5 @@ export class UserSchema {
   @IsBoolean()
   @IsOptional()
   @Expose()
-  isActive: boolean;
+  isActive = true;
 }
