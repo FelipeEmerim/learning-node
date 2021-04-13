@@ -11,22 +11,20 @@ import {
 import { Reflector } from '@nestjs/core';
 import { plainToClass } from 'class-transformer';
 import * as request from 'supertest';
+import { EntityNotFoundError } from 'typeorm';
 import { EntityNotFoundFilter } from '../../shared/filters/entity-not-found.filter';
 import { UserEntityHelper } from '../../../test/helpers/user/entites/user.entity.helper';
 import { UserService } from '../providers/user.service';
 import { UserController } from './user.controller';
-import { UserOutputSchema } from '../schemas/user-output.schema';
 import classValidatorConfigs from '../../config/class-validator/validation.config';
 import { UserSchema } from '../schemas/user.schema';
 import { IdSchema } from '../../shared/schemas/id.schema';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
-import { EntityNotFoundError } from 'typeorm';
 import User from '../entities/user.entity';
 
 describe('User controller', () => {
   const userService = sinon.createStubInstance(UserService);
   let app: INestApplication;
-  let userController: UserController;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -47,9 +45,6 @@ describe('User controller', () => {
     app.useGlobalInterceptors(
       new ClassSerializerInterceptor(app.get(Reflector)),
     );
-
-    userController = module.get<UserController>(UserController);
-
     await app.init();
   });
 
