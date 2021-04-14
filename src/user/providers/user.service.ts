@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as bcrypt from 'bcrypt';
 import { Logger } from 'winston';
-import User from '../entities/user.entity';
+import User from '../models/user.model';
 import { UserRepository } from '../repositories/user.repository';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
 import { UserSchema } from '../schemas/user.schema';

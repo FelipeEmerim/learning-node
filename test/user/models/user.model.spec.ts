@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import User from '../../../src/user/entities/user.entity';
+import User from '../../../src/user/models/user.model';
 
 describe('User entity', () => {
   it('Should make empty user', () => {

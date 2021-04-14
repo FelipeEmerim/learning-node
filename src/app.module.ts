@@ -3,16 +3,16 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { typeormConfig } from './config/typeorm/typeorm.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { sequelizeConfig } from './config/sequelize/sequelize.config';
 import { UserModule } from './user/user.module';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston/winston.config';
+import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot(typeormConfig),
+    SequelizeModule.forRoot(sequelizeConfig),
     UserModule,
     WinstonModule.forRoot(winstonConfig),
   ],

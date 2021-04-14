@@ -5,14 +5,14 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as sinon from 'sinon';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
-import { EntityNotFoundError } from 'typeorm';
 import { UserEntityHelper } from '../../helpers/user/entites/user.entity.helper';
 import { UserRepository } from '../../../src/user/repositories/user.repository';
 import { UserService } from '../../../src/user/providers/user.service';
 import { UserSchemaHelper } from '../../helpers/user/schemas/user.schema.helper';
 import env from '../../../src/app.env';
 import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
-import User from '../../../src/user/entities/user.entity';
+import User from '../../../src/user/models/user.model';
+import { EntityNotFoundError } from '../../../src/shared/exceptions/entity-not-found.exception';
 
 describe('User service', () => {
   const userRepository = sinon.createStubInstance(UserRepository);
@@ -146,7 +146,7 @@ describe('User service', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .withArgs(userSchema.id)
-      .throws(new EntityNotFoundError(User, null));
+      .throws(new EntityNotFoundError());
 
     try {
       await userService.update(userSchema);
@@ -190,7 +190,7 @@ describe('User service', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .withArgs(user.id)
-      .throws(new EntityNotFoundError(User, null));
+      .throws(new EntityNotFoundError());
 
     try {
       await userService.findOne(user.id);
@@ -237,7 +237,7 @@ describe('User service', () => {
       // sinon is not ok with method overloading
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      .throws(new EntityNotFoundError(User, null));
+      .throws(new EntityNotFoundError());
 
     try {
       await userService.delete(user.id);

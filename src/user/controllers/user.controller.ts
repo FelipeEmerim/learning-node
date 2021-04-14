@@ -22,7 +22,7 @@ import { TransformPlainToClass } from 'class-transformer';
 import { ErrorSchema } from '../../shared/swagger/types/error.schema';
 import { ValidationErrorSchema } from '../../shared/swagger/types/validation-error.schema';
 import { IdSchema } from '../../shared/schemas/id.schema';
-import User from '../entities/user.entity';
+import User from '../models/user.model';
 import { UserService } from '../providers/user.service';
 import { UserOutputSchema } from '../schemas/user-output.schema';
 import { UserUpdateSchema } from '../schemas/user-update.schema';

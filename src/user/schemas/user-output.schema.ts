@@ -31,4 +31,18 @@ export class UserOutputSchema {
     example: true,
   })
   readonly isActive: boolean;
+
+  @Expose()
+  @ApiProperty({
+    description: 'The date the user was created',
+    example: new Date(),
+  })
+  readonly createdAt: string;
+
+  @Expose()
+  @ApiProperty({
+    description: 'The date the user updated created',
+    example: new Date(),
+  })
+  readonly updatedAt: string;
 }

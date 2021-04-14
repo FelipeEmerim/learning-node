@@ -11,7 +11,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { plainToClass } from 'class-transformer';
 import * as request from 'supertest';
-import { EntityNotFoundError } from 'typeorm';
 import { EntityNotFoundFilter } from '../../../src/shared/filters/entity-not-found.filter';
 import { UserEntityHelper } from '../../helpers/user/entites/user.entity.helper';
 import { UserService } from '../../../src/user/providers/user.service';
@@ -20,7 +19,8 @@ import classValidatorConfigs from '../../../src/config/class-validator/validatio
 import { UserSchema } from '../../../src/user/schemas/user.schema';
 import { IdSchema } from '../../../src/shared/schemas/id.schema';
 import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
-import User from '../../../src/user/entities/user.entity';
+import User from '../../../src/user/models/user.model';
+import { EntityNotFoundError } from '../../../src/shared/exceptions/entity-not-found.exception';
 
 describe('User controller', () => {
   const userService = sinon.createStubInstance(UserService);
@@ -145,7 +145,7 @@ describe('User controller', () => {
     const user = UserEntityHelper.createEntity();
     const idSchema: IdSchema = plainToClass(IdSchema, user);
 
-    userService.findOne.throws(new EntityNotFoundError(User, idSchema.id));
+    userService.findOne.throws(new EntityNotFoundError());
 
     return request(app.getHttpServer())
       .get(`/user/${idSchema.id}`)
@@ -188,7 +188,7 @@ describe('User controller', () => {
     const userSchema: UserUpdateSchema = plainToClass(UserUpdateSchema, user);
     userSchema.id = idSchema.id;
 
-    userService.update.throws(new EntityNotFoundError(User, idSchema.id));
+    userService.update.throws(new EntityNotFoundError());
 
     return request(app.getHttpServer())
       .put(`/user/${idSchema.id}`)
@@ -238,7 +238,7 @@ describe('User controller', () => {
     const user = UserEntityHelper.createEntity();
     const idSchema: IdSchema = plainToClass(IdSchema, user);
 
-    userService.delete.throws(new EntityNotFoundError(User, idSchema.id));
+    userService.delete.throws(new EntityNotFoundError());
 
     return request(app.getHttpServer())
       .delete(`/user/${idSchema.id}`)

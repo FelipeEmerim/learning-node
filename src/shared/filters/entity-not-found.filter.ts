@@ -4,7 +4,7 @@ import {
   ArgumentsHost,
   HttpStatus,
 } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm';
+import { EntityNotFoundError } from '../exceptions/entity-not-found.exception';
 
 @Catch(EntityNotFoundError)
 export class EntityNotFoundFilter implements ExceptionFilter {
@@ -16,7 +16,7 @@ export class EntityNotFoundFilter implements ExceptionFilter {
     response.status(HttpStatus.NOT_FOUND).json({
       statusCode: HttpStatus.NOT_FOUND,
       error: 'Not Found',
-      message: exception.message,
+      message: 'Resource not found',
     });
   }
 }
