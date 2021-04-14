@@ -2,11 +2,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as bcrypt from 'bcrypt';
 import { Logger } from 'winston';
-import User from '../models/user.model';
 import { UserRepository } from '../repositories/user.repository';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
 import { UserSchema } from '../schemas/user.schema';
 import env from '../../app.env';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -18,7 +18,7 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const users: User[] = await this.usersRepository.find();
+    const users = await this.usersRepository.find();
 
     this.logger.info('Retrieved users list', {
       context: UserService.name,
@@ -57,7 +57,7 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User> {
-    const user: User = await this.usersRepository.findOneOrFail(id);
+    const user = await this.usersRepository.findOneOrFail(id);
 
     this.logger.info(`Retrieved user: ${user.id}`, {
       context: UserService.name,

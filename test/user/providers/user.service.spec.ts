@@ -11,8 +11,8 @@ import { UserService } from '../../../src/user/providers/user.service';
 import { UserSchemaHelper } from '../../helpers/user/schemas/user.schema.helper';
 import env from '../../../src/app.env';
 import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
-import User from '../../../src/user/models/user.model';
 import { EntityNotFoundError } from '../../../src/shared/exceptions/entity-not-found.exception';
+import { User } from '../../../src/user/entities/user.entity';
 
 describe('User service', () => {
   const userRepository = sinon.createStubInstance(UserRepository);

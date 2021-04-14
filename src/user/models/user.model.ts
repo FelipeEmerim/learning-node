@@ -8,8 +8,9 @@ import {
 } from 'sequelize-typescript';
 
 @Table({ tableName: 'users' })
-class User extends Model {
+class UserModel extends Model {
   @PrimaryKey
+  @Column({ field: 'id' })
   id: number;
 
   @Column({ field: 'first_name' })
@@ -33,4 +34,4 @@ class User extends Model {
   updatedAt: Date;
 }
 
-export default User;
+export default UserModel;

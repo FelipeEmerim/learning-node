@@ -19,7 +19,6 @@ import classValidatorConfigs from '../../../src/config/class-validator/validatio
 import { UserSchema } from '../../../src/user/schemas/user.schema';
 import { IdSchema } from '../../../src/shared/schemas/id.schema';
 import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
-import User from '../../../src/user/models/user.model';
 import { EntityNotFoundError } from '../../../src/shared/exceptions/entity-not-found.exception';
 
 describe('User controller', () => {

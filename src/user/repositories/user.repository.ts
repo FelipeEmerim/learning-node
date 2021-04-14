@@ -1,22 +1,32 @@
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { plainToClass } from 'class-transformer';
 import { EntityNotFoundError } from '../../shared/exceptions/entity-not-found.exception';
 import { Repository } from '../../shared/abstract/repository.abstract';
-import User from '../models/user.model';
+import UserModel from '../models/user.model';
+import { User } from '../entities/user.entity';
 
 export class UserRepository implements Repository<User> {
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    @InjectModel(User)
-    protected userModel: typeof User,
+    @InjectModel(UserModel)
+    protected userModel: typeof UserModel,
   ) {}
 
   async find(): Promise<User[]> {
-    return this.userModel.findAll();
+    const users = await this.userModel.findAll();
+
+    return plainToClass(User, users);
   }
 
   async findOne(id: number): Promise<User | null> {
-    return this.userModel.findByPk(id);
+    const user = this.userModel.findByPk(id);
+
+    if (user === null) {
+      return null;
+    }
+
+    return plainToClass(User, user);
   }
 
   async findOneOrFail(id: number): Promise<User> {
@@ -32,13 +42,13 @@ export class UserRepository implements Repository<User> {
   async save(values: object): Promise<User> {
     const user = this.userModel.build(values);
 
-    const dbUser = await this.findOne(user.id);
+    const dbUser = await this.userModel.findByPk(user.id);
 
     if (!dbUser) {
-      return user.save();
+      return plainToClass(User, await user.save());
     }
 
-    return dbUser.update(user);
+    return plainToClass(User, await dbUser.save());
   }
 
   async delete(id: number): Promise<void> {

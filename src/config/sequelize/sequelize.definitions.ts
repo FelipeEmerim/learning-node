@@ -1,3 +1,3 @@
-import User from '../../user/models/user.model';
+import UserModel from '../../user/models/user.model';
 
-export const sequelizeModels = [User];
+export const sequelizeModels = [UserModel];
