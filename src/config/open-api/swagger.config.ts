@@ -5,7 +5,6 @@ const swaggerConfig = new DocumentBuilder()
   .setDescription('API for managing users')
   .setVersion('0.1')
   .addServer('http://localhost:3000', 'Development server')
-  .addTag('User')
   .build();
 
 export default swaggerConfig;

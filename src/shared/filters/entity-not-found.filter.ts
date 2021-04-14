@@ -1,4 +1,3 @@
-
 import {
   ExceptionFilter,
   Catch,
@@ -15,7 +14,8 @@ export class EntityNotFoundFilter implements ExceptionFilter {
     const response = ctx.getResponse();
 
     response.status(HttpStatus.NOT_FOUND).json({
-      status: HttpStatus.NOT_FOUND,
+      statusCode: HttpStatus.NOT_FOUND,
+      error: 'Not Found',
       message: exception.message,
     });
   }
