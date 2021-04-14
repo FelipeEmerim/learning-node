@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { assert } from 'chai';
 import { classToPlain, plainToClass } from 'class-transformer';
-import { UserOutputSchemaHelper } from '../../../test/helpers/user/schemas/user-output.schema.helper';
-import { UserOutputSchema } from './user-output.schema';
+import { UserOutputSchemaHelper } from '../../helpers/user/schemas/user-output.schema.helper';
+import { UserOutputSchema } from '../../../src/user/schemas/user-output.schema';
 
 describe('User output schema', () => {
   it('Should transform plain to user output schema', () => {

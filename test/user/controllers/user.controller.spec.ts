@@ -12,15 +12,15 @@ import { Reflector } from '@nestjs/core';
 import { plainToClass } from 'class-transformer';
 import * as request from 'supertest';
 import { EntityNotFoundError } from 'typeorm';
-import { EntityNotFoundFilter } from '../../shared/filters/entity-not-found.filter';
-import { UserEntityHelper } from '../../../test/helpers/user/entites/user.entity.helper';
-import { UserService } from '../providers/user.service';
-import { UserController } from './user.controller';
-import classValidatorConfigs from '../../config/class-validator/validation.config';
-import { UserSchema } from '../schemas/user.schema';
-import { IdSchema } from '../../shared/schemas/id.schema';
-import { UserUpdateSchema } from '../schemas/user-update.schema';
-import User from '../entities/user.entity';
+import { EntityNotFoundFilter } from '../../../src/shared/filters/entity-not-found.filter';
+import { UserEntityHelper } from '../../helpers/user/entites/user.entity.helper';
+import { UserService } from '../../../src/user/providers/user.service';
+import { UserController } from '../../../src/user/controllers/user.controller';
+import classValidatorConfigs from '../../../src/config/class-validator/validation.config';
+import { UserSchema } from '../../../src/user/schemas/user.schema';
+import { IdSchema } from '../../../src/shared/schemas/id.schema';
+import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
+import User from '../../../src/user/entities/user.entity';
 
 describe('User controller', () => {
   const userService = sinon.createStubInstance(UserService);
@@ -113,6 +113,7 @@ describe('User controller', () => {
       .then((response) => {
         assert.equal(response.status, HttpStatus.UNPROCESSABLE_ENTITY);
         assert.equal(response.body.statusCode, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.equal(response.body.error, 'Unprocessable Entity');
         assert.isArray(response.body.message);
         sinon.assert.notCalled(userService.create);
       });
@@ -150,7 +151,8 @@ describe('User controller', () => {
       .get(`/user/${idSchema.id}`)
       .then((response) => {
         assert.equal(response.status, HttpStatus.NOT_FOUND);
-        assert.equal(response.body.status, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.statusCode, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.error, 'Not Found');
         assert.isDefined(response.body.message);
         sinon.assert.calledOnceWithExactly(userService.findOne, idSchema.id);
       });
@@ -193,7 +195,8 @@ describe('User controller', () => {
       .send(userSchema)
       .then((response) => {
         assert.equal(response.status, HttpStatus.NOT_FOUND);
-        assert.equal(response.body.status, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.statusCode, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.error, 'Not Found');
         assert.isDefined(response.body.message);
         sinon.assert.calledOnceWithExactly(userService.update, userSchema);
       });
@@ -209,6 +212,7 @@ describe('User controller', () => {
       .then((response) => {
         assert.equal(response.status, HttpStatus.UNPROCESSABLE_ENTITY);
         assert.equal(response.body.statusCode, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.equal(response.body.error, 'Unprocessable Entity');
         assert.isArray(response.body.message);
         sinon.assert.notCalled(userService.update);
       });
@@ -230,7 +234,7 @@ describe('User controller', () => {
       });
   });
 
-  it('Should delete a user by id', async () => {
+  it('Should not delete a user by id because not found', async () => {
     const user = UserEntityHelper.createEntity();
     const idSchema: IdSchema = plainToClass(IdSchema, user);
 
@@ -240,7 +244,8 @@ describe('User controller', () => {
       .delete(`/user/${idSchema.id}`)
       .then((response) => {
         assert.equal(response.status, HttpStatus.NOT_FOUND);
-        assert.equal(response.body.status, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.statusCode, HttpStatus.NOT_FOUND);
+        assert.equal(response.body.error, 'Not Found');
         assert.isDefined(response.body.message);
         sinon.assert.calledOnceWithExactly(userService.delete, idSchema.id);
       });

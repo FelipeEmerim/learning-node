@@ -12,10 +12,10 @@ import {
   ValidationTypes,
 } from 'class-validator';
 import * as faker from 'faker/locale/en';
-import { ClassValidatorHelper } from '../../../test/helpers/shared/class-validator.helper';
-import { UserSchemaHelper } from '../../../test/helpers/user/schemas/user.schema.helper';
-import validationPipeConfigs from '../../config/class-validator/validation.config';
-import { UserSchema } from './user.schema';
+import { ClassValidatorHelper } from '../../helpers/shared/class-validator.helper';
+import { UserSchemaHelper } from '../../helpers/user/schemas/user.schema.helper';
+import validationPipeConfigs from '../../../src/config/class-validator/validation.config';
+import { UserSchema } from '../../../src/user/schemas/user.schema';
 
 describe('User update schema', () => {
   let validationPipe: ValidationPipe;

@@ -6,13 +6,13 @@ import * as sinon from 'sinon';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
 import { EntityNotFoundError } from 'typeorm';
-import { UserEntityHelper } from '../../../test/helpers/user/entites/user.entity.helper';
-import { UserRepository } from '../repositories/user.repository';
-import { UserService } from './user.service';
-import { UserSchemaHelper } from '../../../test/helpers/user/schemas/user.schema.helper';
-import env from '../../app.env';
-import { UserUpdateSchema } from '../schemas/user-update.schema';
-import User from '../entities/user.entity';
+import { UserEntityHelper } from '../../helpers/user/entites/user.entity.helper';
+import { UserRepository } from '../../../src/user/repositories/user.repository';
+import { UserService } from '../../../src/user/providers/user.service';
+import { UserSchemaHelper } from '../../helpers/user/schemas/user.schema.helper';
+import env from '../../../src/app.env';
+import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
+import User from '../../../src/user/entities/user.entity';
 
 describe('User service', () => {
   const userRepository = sinon.createStubInstance(UserRepository);
