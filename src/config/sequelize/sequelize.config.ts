@@ -11,5 +11,4 @@ export const sequelizeConfig: SequelizeModuleOptions = {
   database: env.DB_DATABASE as string,
   models: sequelizeModels,
   synchronize: false,
-  migrations: ['migrations/*{.ts,.js}'],
 };
