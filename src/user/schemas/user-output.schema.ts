@@ -20,7 +20,7 @@ export class UserOutputSchema {
 
   @Expose()
   @ApiProperty({
-    description: 'The last of the user',
+    description: 'The last name of the user',
     example: 'Garcia',
   })
   readonly lastName: string;

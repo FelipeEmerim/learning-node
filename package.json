@@ -24,7 +24,7 @@
     "postmigration:create": "npm run migration:lint",
     "migration:run": "npm run knex -- migrate:latest",
     "migration:revert": "npm run knex -- migrate:rollback",
-    "migration:lint": "prettier --write \"src/database/**/*.ts\""
+    "migration:lint": "eslint \"src/database/**/*.ts\" --fix"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.12.0",
@@ -69,7 +69,7 @@
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
     "@types/sequelize": "^4.28.9",
-    "@types/sinon": "^9.0.11",
+    "@types/sinon": "^10.0.0",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
