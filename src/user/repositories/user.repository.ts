@@ -1,38 +1,46 @@
-import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
 import { plainToClass } from 'class-transformer';
+import { Inject, Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
 import { EntityNotFoundError } from '../../shared/exceptions/entity-not-found.exception';
 import { Repository } from '../../shared/abstract/repository.abstract';
-import UserModel from '../models/user.model';
 import { User } from '../entities/user.entity';
+import { KNEX_MODULE } from '../../knex/knex.module';
 
+@Injectable()
 export class UserRepository implements Repository<User> {
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    @InjectModel(UserModel)
-    protected userModel: typeof UserModel,
+    @Inject(KNEX_MODULE)
+    protected knex: Knex,
   ) {}
 
   async find(): Promise<User[]> {
-    const users = await this.userModel.findAll();
+    const users = await this.knex<User>('users').select('*');
 
-    return plainToClass(User, users);
+    return users;
   }
 
   async findOne(id: number): Promise<User | null> {
-    const user = this.userModel.findByPk(id);
-
-    if (user === null) {
+    if (typeof id === 'undefined') {
       return null;
     }
 
-    return plainToClass(User, user);
+    const user = await this.knex<User>('users')
+      .select('*')
+      .where({ id })
+      .first();
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
 
   async findOneOrFail(id: number): Promise<User> {
     const user = await this.findOne(id);
 
-    if (user === null) {
+    if (!user) {
       throw new EntityNotFoundError();
     }
 
@@ -40,24 +48,21 @@ export class UserRepository implements Repository<User> {
   }
 
   async save(values: object): Promise<User> {
-    const user = this.userModel.build(values);
-
-    const dbUser = await this.userModel.findByPk(user.id);
+    const user = plainToClass(User, values);
+    const dbUser = await this.findOne(user.id);
 
     if (!dbUser) {
-      return plainToClass(User, await user.save());
+      const users = await this.knex<User>('users').insert(user).returning('*');
+
+      return users[0];
     }
 
-    return plainToClass(User, await dbUser.save());
+    const users = await this.knex<User>('users').update(user, '*');
+
+    return users[0];
   }
 
   async delete(id: number): Promise<void> {
-    this.userModel.destroy({
-      where: {
-        id: {
-          [Op.eq]: id,
-        },
-      },
-    });
+    await this.knex<User>('users').del().where({ id });
   }
 }

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { KnexModule, KNEX_MODULE } from '../knex/knex.module';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './providers/user.service';
 import { UserRepository } from './repositories/user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository])],
-  providers: [UserService],
+  imports: [KnexModule],
+  providers: [UserRepository, UserService],
   controllers: [UserController],
   exports: [UserService],
 })
