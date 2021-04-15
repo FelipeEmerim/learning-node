@@ -24,7 +24,17 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository integrated with:
+
+* sequelize
+* swagger
+* winston
+* jest
+* airbnb eslint
+* editorconfig
+* prettier
+* class-transformer
+* class-validator
 
 ## Installation
 
@@ -34,60 +44,78 @@ docker-compose run --rm node npm install
 
 ## Running the app
 
-Copy the .env.example file and fill the appropriate values.
+Copy the .env.example file to .env and fill the appropriate values.
 
 ```bash
-# development
+# To start the application and its containers run
+docker-compose up
+
+# To start elastic search, kibana and apm to test logs run
+docker-compose -f docker-compose-kibana.yml up
+```
+
+After that you can access the app in localhost:3000 and the docs
+in localhost:3000/api
+
+## Custom scripts
+The project comes with a set of scripts to run repetitive tasks.
+By default run commands do not expose ports, to attach a debugger
+it is necessary to add the --service-ports flag to the docker-compose 
+run command
+
+To run migrations you need to up the database container
+
+```bash
+# Run prettier formatter
+docker-compose run --rm node npm run format
+
+# start the application
 docker-compose run --rm node npm run start
 
-# watch mode
+# start the application in watch mode (live reload)
 docker-compose run --rm node npm run start:dev
 
-# production mode
+# start the application in watch mode (live reload) and with a debug listener
+docker-compose run --rm node npm run start:debug
+
+# start the application in prodution mode
 docker-compose run --rm node npm run start:prod
-```
 
-## Test
-
-```bash
-# unit tests
-docker-compose run --rm node npm run test
-
-# e2e tests
-docker-compose run --rm node npm run test:e2e
-
-# test coverage
-docker-compose run --rm node npm run test:cov
-```
-
-## Migrations
-
-```bash
-
-# create empty migration
-docker-compose run --rm node npm run migration:create
-
-# generate migration
-docker-compose run --rm node npm run migration:generate
-
-# run migration
-docker-compose run --rm node npm run migration:run
-
-# revert migrations
-docker-compose run --rm npm run migration:revert
-
-```
-
-## Lint
-
-```bash
-
-# Run lint on whole project
+# apply eslint + prettier rules to the project
 docker-compose run --rm node npm run lint
 
-# Run lint on migrations dir. This always runs after the migration:create/generate command
-docker-compose run --rm node npm run migration:lint
+# Run unit tests
+docker-compose run --rm node npm run test
 
+# Run unit tests in watch mode (live reload)
+docker-compose run --rm node npm run test:watch
+
+# Run unit tests in with coverage report
+docker-compose run --rm node npm run test:cov
+
+# Run unit tests in debug mode, waits until debugger is attached. Use with --service-ports
+docker-compose run --rm node npm run test:debug
+
+# Run end to end tests
+docker-compose run --rm node npm run test:e2e
+
+# Run a sequelize command using typescript: wip
+docker-compose run --rm node npm run sequelize
+
+# Generate a sequelize migration using typescript: wip
+docker-compose run --rm node npm run migration:create
+
+# Apply lint to migrations after a migration is created (automatically run by npm after migration:create)
+docker-compose run --rm node npm run postmigration:create
+
+# Run all migrations up to the latest version: wip
+docker-compose run --rm node npm run migration:run
+
+# Downgrade migrations in 1 version, use with --all to downgrade all versions: wip
+docker-compose run --rm node npm run migration:revert
+
+# Apply lint to migrations folder
+docker-compose run --rm node npm run migration:lint
 ```
 
 ## Support
