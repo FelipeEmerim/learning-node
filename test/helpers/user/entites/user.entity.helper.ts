@@ -8,6 +8,8 @@ export class UserEntityHelper {
     user.lastName = 'Garcia';
     user.isActive = true;
     user.password = '123456';
+    user.createdAt = new Date();
+    user.updatedAt = new Date();
 
     return user;
   }
