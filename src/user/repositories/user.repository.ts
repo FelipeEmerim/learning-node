@@ -53,12 +53,11 @@ export class UserRepository implements Repository<User> {
 
     if (!dbUser) {
       const users = await this.knex<User>('users').insert(user).returning('*');
-
       return users[0];
     }
 
+    user.updatedAt = new Date(new Date().toUTCString());
     const users = await this.knex<User>('users').update(user, '*');
-
     return users[0];
   }
 

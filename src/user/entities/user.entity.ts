@@ -18,7 +18,7 @@ export class User {
   isActive: boolean;
 
   @Expose()
-  createdAt: Date;
+  createdAt?: Date;
 
   @Expose()
   updatedAt: Date;
