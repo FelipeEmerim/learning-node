@@ -26,7 +26,7 @@
     "postmigration:create": "npm run migration:lint",
     "migration:run": "npm run typeorm:cli -- migration:run",
     "migration:revert": "npm run typeorm:cli -- migration:revert",
-    "migration:lint": "prettier --write \"migrations/**/*.ts\""
+    "migration:lint": "eslint \"src/migrations/**/*.ts\" --fix"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.12.0",
