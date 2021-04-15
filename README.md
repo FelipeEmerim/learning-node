@@ -33,6 +33,8 @@
 * airbnb eslint
 * editorconfig
 * prettier
+* class-transformer
+* class-validator
 
 ## Installation
 
