@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
-import { boolean, string } from 'joi';
 
 @Exclude()
 export class UserSchema {
@@ -42,7 +41,7 @@ export class UserSchema {
   @IsOptional()
   @Expose()
   @ApiPropertyOptional({
-    type: boolean,
+    type: Boolean,
     default: true,
     example: true,
     description: 'Indicate if the user is active',

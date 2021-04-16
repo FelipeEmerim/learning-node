@@ -13,6 +13,7 @@ import env from '../../../src/app.env';
 import { UserUpdateSchema } from '../../../src/user/schemas/user-update.schema';
 import { EntityNotFoundError } from '../../../src/shared/exceptions/entity-not-found.exception';
 import { User } from '../../../src/user/entities/user.entity';
+import classTransformOptions from '../../../src/config/class-transformer/transformer.config';
 
 describe('User service', () => {
   const userRepository = sinon.createStubInstance(UserRepository);
@@ -45,13 +46,13 @@ describe('User service', () => {
   it('Should find all users', async () => {
     const user = UserEntityHelper.createEntity();
     const expected = [user];
-    userRepository.find.resolves(expected);
+    userRepository.findAll.resolves(expected);
 
     const result = await userService.findAll();
 
     assert.deepEqual(result, expected);
 
-    sinon.assert.calledOnce(userRepository.find);
+    sinon.assert.calledOnce(userRepository.findAll);
     sinon.assert.calledOnce(logger.info);
   });
 
@@ -61,11 +62,14 @@ describe('User service', () => {
 
     const userSchema = UserSchemaHelper.createSchema();
     const { password } = userSchema;
+    const inputUser = plainToClass(User, userSchema, classTransformOptions);
+    inputUser.password = user.password;
+
+    const expected = user;
 
     bcryptMock.hash.withArgs(password, env.SALT).resolves(user.password);
 
-    const expected = user;
-    userRepository.save.withArgs(userSchema).resolves(user);
+    userRepository.save.withArgs(inputUser).resolves(user);
 
     const result = await userService.create(userSchema);
 
@@ -218,7 +222,8 @@ describe('User service', () => {
       .withArgs(user.id)
       .resolves(user);
 
-    userRepository.delete.withArgs(user.id).resolves();
+    userRepository.delete.withArgs(user).resolves();
+    userRepository.findOne.resolves(user);
 
     await userService.delete(user.id);
     sinon.assert.notCalled(userRepository.save);
@@ -226,7 +231,7 @@ describe('User service', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     sinon.assert.calledWith(userRepository.findOneOrFail, user.id);
-    sinon.assert.calledWith(userRepository.delete, user.id);
+    sinon.assert.calledWith(userRepository.delete, user);
     sinon.assert.calledTwice(logger.info);
   });
 

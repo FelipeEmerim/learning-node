@@ -1,12 +1,12 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { KnexModule, KNEX_MODULE } from '../knex/knex.module';
 import { UserController } from './controllers/user.controller';
+import { User } from './entities/user.entity';
 import { UserService } from './providers/user.service';
-import { UserRepository } from './repositories/user.repository';
 
 @Module({
-  imports: [KnexModule],
-  providers: [UserRepository, UserService],
+  imports: [MikroOrmModule.forFeature([User])],
+  providers: [UserService],
   controllers: [UserController],
   exports: [UserService],
 })

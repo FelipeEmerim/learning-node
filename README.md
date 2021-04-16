@@ -26,7 +26,7 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository integrated with:
 
-* knex
+* mikro-orm
 * swagger
 * winston
 * jest
@@ -99,10 +99,10 @@ docker-compose run --rm node npm run test:debug
 # Run end to end tests
 docker-compose run --rm node npm run test:e2e
 
-# Run a knex command using typescript
-docker-compose run --rm node npm run knex
+# Run a mikro-orm command using typescript
+docker-compose run --rm node npm run mikro-orm
 
-# Generate a knex migration using typescript
+# Generate a mikro-orm migration using typescript
 docker-compose run --rm node npm run migration:create
 
 # Apply lint to migrations after a migration is created (automatically run by npm after migration:create)

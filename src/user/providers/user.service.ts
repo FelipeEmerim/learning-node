@@ -2,11 +2,13 @@ import { Injectable, Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as bcrypt from 'bcrypt';
 import { Logger } from 'winston';
+import { plainToClass } from 'class-transformer';
 import { UserRepository } from '../repositories/user.repository';
 import { UserUpdateSchema } from '../schemas/user-update.schema';
 import { UserSchema } from '../schemas/user.schema';
 import env from '../../app.env';
 import { User } from '../entities/user.entity';
+import classTransformOptions from '../../config/class-transformer/transformer.config';
 
 @Injectable()
 export class UserService {
@@ -18,7 +20,7 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const users = await this.usersRepository.find();
+    const users = await this.usersRepository.findAll();
 
     this.logger.info('Retrieved users list', {
       context: UserService.name,
@@ -29,7 +31,7 @@ export class UserService {
   }
 
   async create(userSchema: UserSchema): Promise<User> {
-    const user = userSchema;
+    const user = plainToClass(User, userSchema, classTransformOptions);
 
     user.password = await bcrypt.hash(user.password, env.SALT);
     const savedUser = await this.usersRepository.save(user);
@@ -46,6 +48,7 @@ export class UserService {
     user.firstName = userUpdateSchema.firstName ?? user.firstName;
     user.lastName = userUpdateSchema.lastName ?? user.lastName;
     user.isActive = userUpdateSchema.isActive ?? user.isActive;
+
     const savedUser = await this.usersRepository.save(user);
 
     this.logger.info(`User updated: ${savedUser.id}`, {
@@ -68,8 +71,8 @@ export class UserService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.findOne(id);
-    await this.usersRepository.delete(id);
+    const user = await this.findOne(id);
+    await this.usersRepository.delete(user);
 
     this.logger.info(`User deleted: ${id}`, {
       context: UserService.name,
