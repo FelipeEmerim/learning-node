@@ -1,14 +1,13 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { Knex, knex } from 'knex';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 
 export const KNEX_MODULE = 'KNEX_MODULE';
 
-@Global()
 @Module({})
 export class KnexModule {
-  static forRoot(options: Knex.Config): DynamicModule {
+  static register(options: Knex.Config): DynamicModule {
     return {
       module: KnexModule,
       providers: [

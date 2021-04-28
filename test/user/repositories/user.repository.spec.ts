@@ -34,7 +34,7 @@ describe('User repository', () => {
 
     const module = await Test.createTestingModule({
       imports: [
-        KnexModule.forRoot(knexConfigs),
+        KnexModule.register(knexConfigs),
         {
           module: WinstonModule,
           providers: [
