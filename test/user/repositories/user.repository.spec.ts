@@ -3,13 +3,13 @@ import { assert } from 'chai';
 import * as sinon from 'sinon';
 import KnexBuilder, { Knex } from 'knex';
 import { WinstonModule, WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import * as winston from 'winston';
 import { UserSchemaHelper } from '../../helpers/user/schemas/user.schema.helper';
 import { UserRepository } from '../../../src/user/repositories/user.repository';
 import { EntityNotFoundError } from '../../../src/shared/exceptions/entity-not-found.exception';
 import { User } from '../../../src/user/entities/user.entity';
 import { KnexModule, KNEX_MODULE } from '../../../src/knex/knex.module';
 import knexConfigs from '../../../src/database/knexfile';
-import * as winston from 'winston';
 
 describe('User repository', () => {
   let userRepository: UserRepository;
