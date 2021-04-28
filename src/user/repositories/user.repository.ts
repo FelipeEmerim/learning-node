@@ -15,7 +15,7 @@ export class UserRepository implements Repository<User> {
   ) {}
 
   async find(): Promise<User[]> {
-    const users = await this.knex<User>('users').select('*');
+    const users = await this.knex<User>('users').select();
 
     return users;
   }
@@ -25,10 +25,7 @@ export class UserRepository implements Repository<User> {
       return null;
     }
 
-    const user = await this.knex<User>('users')
-      .select('*')
-      .where({ id })
-      .first();
+    const user = await this.knex<User>('users').select().where({ id }).first();
 
     if (!user) {
       return null;
@@ -48,17 +45,19 @@ export class UserRepository implements Repository<User> {
   }
 
   async save(values: object): Promise<User> {
-    const user = plainToClass(User, values);
-    const dbUser = await this.findOne(user.id);
+    const data = plainToClass(User, values);
+    const dbUser = await this.findOne(data.id);
 
     if (!dbUser) {
-      const users = await this.knex<User>('users').insert(user).returning('*');
-      return users[0];
+      const [user] = await this.knex<User>('users').insert(data).returning('*');
+      return user;
     }
 
-    user.updatedAt = new Date(new Date().toUTCString());
-    const users = await this.knex<User>('users').update(user, '*');
-    return users[0];
+    data.updatedAt = new Date(new Date().toUTCString());
+    const [user] = await this.knex<User>('users')
+      .update(data, '*')
+      .where({ id: data.id });
+    return user;
   }
 
   async delete(id: number): Promise<void> {

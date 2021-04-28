@@ -1,5 +1,10 @@
+import * as path from 'path';
 import { knexConfigs } from '../config/knex/knex.config';
 
-const knexCliConfigs = knexConfigs;
+knexConfigs.migrations = knexConfigs.migrations ?? {};
+knexConfigs.seeds = knexConfigs.seeds ?? {};
 
-export default knexCliConfigs;
+knexConfigs.migrations.directory = path.join(__dirname, 'migrations');
+knexConfigs.seeds.directory = path.join(__dirname, 'seeds');
+
+export default knexConfigs;

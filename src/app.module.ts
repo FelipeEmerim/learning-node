@@ -8,7 +8,7 @@ import { UserModule } from './user/user.module';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston/winston.config';
 import { KnexModule } from './knex/knex.module';
-import { knexConfigs } from './config/knex/knex.config';
+import knexConfigs from './database/knexfile';
 
 @Module({
   imports: [

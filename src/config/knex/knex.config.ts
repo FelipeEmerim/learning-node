@@ -1,6 +1,10 @@
 import { Knex } from 'knex';
 import env from '../../app.env';
 
+/**
+ * Migrations and seeds dir are overwritten in knexfile.ts
+ * If you need those options import from knexfile.ts
+ */
 export const knexConfigs: Knex.Config = {
   client: 'pg',
   connection: {
@@ -14,11 +18,9 @@ export const knexConfigs: Knex.Config = {
     },
   },
   migrations: {
-    directory: 'migrations',
     tableName: 'migrations',
   },
   seeds: {
-    directory: 'seeds',
-    timestampFilenamePrefix: true,
+    timestampFilenamePrefix: false,
   },
 };

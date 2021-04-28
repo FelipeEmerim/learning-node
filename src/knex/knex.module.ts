@@ -20,7 +20,6 @@ export class KnexModule {
               context: KnexModule.name,
               tags: ['instance', 'knex', 'create'],
             });
-            // eslint-disable-next-line new-cap
             return knex(options);
           },
         },

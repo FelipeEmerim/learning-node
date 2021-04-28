@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { KnexModule, KNEX_MODULE } from '../knex/knex.module';
+import { KnexModule } from '../knex/knex.module';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './providers/user.service';
 import { UserRepository } from './repositories/user.repository';
