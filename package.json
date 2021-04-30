@@ -19,19 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk=0.0.0.0 -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "ts-knex": "ts-node -r dotenv/config -r tsconfig-paths/register node_modules/.bin/knex --knexfile src/database/knexfile.ts",
-    "ts-knex:lint": "eslint \"src/database/**/*.ts\" --fix",
-    "ts-migration:create": "npm run ts-knex -- migrate:make -x ts",
-    "postts-migration:create": "npm run ts-knex:lint",
-    "ts-seed:create": "npm run ts-knex -- seed:make -x ts",
-    "postts-seed:create": "npm run ts-knex:lint",
-    "ts-migration:run": "npm run ts-knex -- migrate:latest",
-    "ts-migration:revert": "npm run ts-knex -- migrate:rollback",
-    "ts-seed:run": "npm run ts-knex -- seed:run",
-    "knex": "node -r dotenv/config node_modules/.bin/knex --knexfile dist/database/knexfile.js",
-    "migration:run": "npm run knex -- migrate:latest",
-    "migration:revert": "npm run knex -- migrate:rollback",
-    "seed:run": "npm run knex -- seed:run"
+    "ts-knex": "ts-node -r dotenv/config -r tsconfig-paths/register node_modules/.bin/knex",
+    "knex": "node -r dotenv/config node_modules/.bin/knex"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.12.0",

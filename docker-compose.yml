@@ -24,7 +24,7 @@ services:
       - ./:/app
     command: npm run start:debug
 
-  database:
+  users:
     image: postgres:13-alpine
     restart: unless-stopped
     networks:
@@ -32,14 +32,28 @@ services:
     ports:
       - "54321:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
-      - ./:/app
+      - users-db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${USERS_DB_USERNAME}
+      - POSTGRES_PASSWORD=${USERS_DB_PASSWORD}
+
+  cats:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    networks:
+      - main
+    ports:
+      - "54322:5432"
+    volumes:
+      - cats-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${CATS_DB_USERNAME}
+      - POSTGRES_PASSWORD=${CATS_DB_PASSWORD}
 
 volumes:
-  db-data:
+  users-db-data:
+    driver: local
+  cats-db-data:
     driver: local
 
 networks:

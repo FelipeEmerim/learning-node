@@ -4,13 +4,15 @@ import { Knex } from 'knex';
 import { EntityNotFoundError } from '../../shared/exceptions/entity-not-found.exception';
 import { Repository } from '../../shared/abstract/repository.abstract';
 import { User } from '../entities/user.entity';
-import { KNEX_MODULE } from '../../knex/knex.module';
 
 @Injectable()
 export class UserRepository implements Repository<User> {
   // eslint-disable-next-line no-useless-constructor
+  public static KNEX_TOKEN = 'KNEX_USERS_TOKEN';
+
+  // eslint-disable-next-line no-useless-constructor
   constructor(
-    @Inject(KNEX_MODULE)
+    @Inject(UserRepository.KNEX_TOKEN)
     protected knex: Knex,
   ) {}
 
