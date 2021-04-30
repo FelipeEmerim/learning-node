@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   node:
@@ -14,10 +14,11 @@ services:
         - no_proxy
     image: learning-node/node:latest
     ports:
-      - "3000:3000"
-      - "9229:9229"
+      - "${HOST_PORT:-3000}:3000"
+      - "${DEBUG_HOST_PORT:-9229}:9229"
     networks:
       - main
+      - services
     stdin_open: true
     tty: true
     volumes:
@@ -29,8 +30,9 @@ services:
     restart: unless-stopped
     networks:
       - main
+      - services
     ports:
-      - "54321:5432"
+      - "${USERS_DB_HOST_PORT:-54321}:5432"
     volumes:
       - users-db-data:/var/lib/postgresql/data
     environment:
@@ -42,8 +44,9 @@ services:
     restart: unless-stopped
     networks:
       - main
+      - services
     ports:
-      - "54322:5432"
+      - "${CATS_DB_HOST_PORT:-54322}:5432"
     volumes:
       - cats-db-data:/var/lib/postgresql/data
     environment:
@@ -59,3 +62,6 @@ volumes:
 networks:
   main:
     driver: bridge
+  services:
+    external: true
+    name: services
