@@ -82,11 +82,13 @@ describe('Cat repository', () => {
 
   it('Should update a cat', async () => {
     const cat = {
-      id: 1,
+      id: '96783cdb-c490-4aaa-9894-058949e19e26',
       name: 'Cool first name',
     };
 
-    const oldValues = (await catRepository.findOne(1)) as Cat;
+    const oldValues = (await catRepository.findOne(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    )) as Cat;
 
     const newValues = await catRepository.save(cat);
 
@@ -100,9 +102,11 @@ describe('Cat repository', () => {
   });
 
   it('Should find a cat by id', async () => {
-    const cat = (await catRepository.findOne(1)) as Cat;
+    const cat = (await catRepository.findOne(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    )) as Cat;
 
-    assert.equal(cat.id, 1);
+    assert.equal(cat.id, '96783cdb-c490-4aaa-9894-058949e19e26');
     assert.equal(cat.name, 'Romero');
     assert.equal(cat.description, 'Britto');
     assert.equal(cat.isActive, true);
@@ -111,9 +115,11 @@ describe('Cat repository', () => {
   });
 
   it('Should find a cat by id or fail: success', async () => {
-    const cat = (await catRepository.findOneOrFail(1)) as Cat;
+    const cat = (await catRepository.findOneOrFail(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    )) as Cat;
 
-    assert.equal(cat.id, 1);
+    assert.equal(cat.id, '96783cdb-c490-4aaa-9894-058949e19e26');
     assert.equal(cat.name, 'Romero');
     assert.equal(cat.description, 'Britto');
     assert.equal(cat.isActive, true);
@@ -123,7 +129,7 @@ describe('Cat repository', () => {
 
   it('Should find a cat by id or fail: fail', async () => {
     try {
-      await catRepository.findOneOrFail(4);
+      await catRepository.findOneOrFail('7ef3c0ba-03d7-49e4-8d83-7b7b6c8eb929');
     } catch (error: unknown) {
       assert.instanceOf(error, EntityNotFoundError);
       return;
@@ -133,9 +139,11 @@ describe('Cat repository', () => {
   });
 
   it('Should delete a cat by id', async () => {
-    await catRepository.delete(1);
+    await catRepository.delete('96783cdb-c490-4aaa-9894-058949e19e26');
 
-    const cat = await catRepository.findOne(1);
+    const cat = await catRepository.findOne(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    );
 
     assert.isNull(cat);
   });

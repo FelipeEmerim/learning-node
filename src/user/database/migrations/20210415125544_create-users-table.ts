@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('users', (table: Knex.CreateTableBuilder) => {
-    table.bigIncrements('id').primary();
+    table.uuid('id').primary().defaultTo(knex.raw('gen_random_uuid()'));
     table.text('firstName').notNullable();
     table.text('lastName').notNullable();
     table.text('password').notNullable();

@@ -56,7 +56,7 @@ export class UserService {
     return savedUser;
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: string): Promise<User> {
     const user = await this.usersRepository.findOneOrFail(id);
 
     this.logger.info(`Retrieved user: ${user.id}`, {
@@ -67,7 +67,7 @@ export class UserService {
     return user;
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.findOne(id);
     await this.usersRepository.delete(id);
 

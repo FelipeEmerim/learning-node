@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsInt } from 'class-validator';
+import { IsUUID } from 'class-validator';
 
 export class IdSchema {
-  @Type(() => Number)
-  @IsInt()
+  @IsUUID()
   @ApiProperty({
-    example: 1,
+    example: '7ef3c0ba-03d7-49e4-8d83-7b7b6c8eb929',
     description: 'Indicate the id of the user',
   })
-  id: number;
+  id: string;
 }

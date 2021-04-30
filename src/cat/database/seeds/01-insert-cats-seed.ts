@@ -7,7 +7,7 @@ export async function seed(knex: Knex): Promise<void> {
   // Inserts seed entries
   await knex('cats').insert([
     {
-      id: 1,
+      id: '96783cdb-c490-4aaa-9894-058949e19e26',
       name: 'Romero',
       description: 'Britto',
       isActive: true,
@@ -15,7 +15,7 @@ export async function seed(knex: Knex): Promise<void> {
       updatedAt: new Date(),
     },
     {
-      id: 2,
+      id: 'a48e43fb-1762-436c-bd03-19a730a0869b',
       name: 'Paulo',
       description: 'Souza',
       isActive: true,
@@ -23,7 +23,7 @@ export async function seed(knex: Knex): Promise<void> {
       updatedAt: new Date(),
     },
     {
-      id: 3,
+      id: 'e4e80e06-09ce-47cf-a81b-655ba471bacf',
       name: 'Rodrigo',
       description: 'Santos',
       isActive: true,
@@ -31,6 +31,4 @@ export async function seed(knex: Knex): Promise<void> {
       updatedAt: new Date(),
     },
   ]);
-
-  await knex.raw("select setval('cats_id_seq', max(id)) from cats");
 }

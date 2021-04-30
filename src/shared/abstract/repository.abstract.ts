@@ -1,7 +1,7 @@
 export interface Repository<T> {
   find(): Promise<T[]>;
-  findOneOrFail(id: number): Promise<T>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  findOneOrFail(id: string): Promise<T>;
+  findOne(id: string): Promise<T | null>;
   save(values: object): Promise<T>;
-  delete(id: number): Promise<void>;
+  delete(id: string): Promise<void>;
 }

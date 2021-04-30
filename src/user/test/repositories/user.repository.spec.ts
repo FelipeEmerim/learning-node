@@ -83,11 +83,13 @@ describe('User repository', () => {
 
   it('Should update a user', async () => {
     const user = {
-      id: 1,
+      id: '96783cdb-c490-4aaa-9894-058949e19e26',
       firstName: 'Cool first name',
     };
 
-    const oldValues = (await userRepository.findOne(1)) as User;
+    const oldValues = (await userRepository.findOne(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    )) as User;
 
     const newValues = await userRepository.save(user);
 
@@ -102,9 +104,11 @@ describe('User repository', () => {
   });
 
   it('Should find a user by id', async () => {
-    const user = (await userRepository.findOne(1)) as User;
+    const user = (await userRepository.findOne(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    )) as User;
 
-    assert.equal(user.id, 1);
+    assert.equal(user.id, '96783cdb-c490-4aaa-9894-058949e19e26');
     assert.equal(user.firstName, 'Romero');
     assert.equal(user.lastName, 'Britto');
     assert.isDefined(user.password);
@@ -114,9 +118,11 @@ describe('User repository', () => {
   });
 
   it('Should find a user by id or fail: success', async () => {
-    const user = (await userRepository.findOneOrFail(1)) as User;
+    const user = (await userRepository.findOneOrFail(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    )) as User;
 
-    assert.equal(user.id, 1);
+    assert.equal(user.id, '96783cdb-c490-4aaa-9894-058949e19e26');
     assert.equal(user.firstName, 'Romero');
     assert.equal(user.lastName, 'Britto');
     assert.isDefined(user.password);
@@ -127,7 +133,9 @@ describe('User repository', () => {
 
   it('Should find a user by id or fail: fail', async () => {
     try {
-      await userRepository.findOneOrFail(4);
+      await userRepository.findOneOrFail(
+        '7ef3c0ba-03d7-49e4-8d83-7b7b6c8eb929',
+      );
     } catch (error: unknown) {
       assert.instanceOf(error, EntityNotFoundError);
       return;
@@ -137,9 +145,11 @@ describe('User repository', () => {
   });
 
   it('Should delete a user by id', async () => {
-    await userRepository.delete(1);
+    await userRepository.delete('96783cdb-c490-4aaa-9894-058949e19e26');
 
-    const user = await userRepository.findOne(1);
+    const user = await userRepository.findOne(
+      '96783cdb-c490-4aaa-9894-058949e19e26',
+    );
 
     assert.isNull(user);
   });

@@ -22,7 +22,7 @@ export class UserRepository implements Repository<User> {
     return users;
   }
 
-  async findOne(id: number): Promise<User | null> {
+  async findOne(id: string): Promise<User | null> {
     if (typeof id === 'undefined') {
       return null;
     }
@@ -36,7 +36,7 @@ export class UserRepository implements Repository<User> {
     return user;
   }
 
-  async findOneOrFail(id: number): Promise<User> {
+  async findOneOrFail(id: string): Promise<User> {
     const user = await this.findOne(id);
 
     if (!user) {
@@ -62,7 +62,7 @@ export class UserRepository implements Repository<User> {
     return user;
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.knex<User>('users').del().where({ id });
   }
 }

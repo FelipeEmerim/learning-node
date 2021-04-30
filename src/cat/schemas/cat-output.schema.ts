@@ -1,15 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
 export class CatOutputSchema {
   @Expose()
-  @Type(() => Number)
   @ApiProperty({
     description: 'The id of the cat',
-    example: 1,
+    example: '7ef3c0ba-03d7-49e4-8d83-7b7b6c8eb929',
   })
-  readonly id: number;
+  readonly id: string;
 
   @Expose()
   @ApiProperty({

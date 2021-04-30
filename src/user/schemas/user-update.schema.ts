@@ -10,7 +10,7 @@ import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 export class UserUpdateSchema {
   @Exclude()
   @ApiHideProperty()
-  id: number;
+  id: string;
 
   @IsString()
   @Length(5, 100)

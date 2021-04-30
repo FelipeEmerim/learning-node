@@ -22,7 +22,7 @@ export class CatRepository implements Repository<Cat> {
     return cats;
   }
 
-  async findOne(id: number): Promise<Cat | null> {
+  async findOne(id: string): Promise<Cat | null> {
     if (typeof id === 'undefined') {
       return null;
     }
@@ -36,7 +36,7 @@ export class CatRepository implements Repository<Cat> {
     return cat;
   }
 
-  async findOneOrFail(id: number): Promise<Cat> {
+  async findOneOrFail(id: string): Promise<Cat> {
     const cat = await this.findOne(id);
 
     if (!cat) {
@@ -62,7 +62,7 @@ export class CatRepository implements Repository<Cat> {
     return cat;
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.knex<Cat>('cats').del().where({ id });
   }
 }

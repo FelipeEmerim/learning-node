@@ -53,7 +53,7 @@ export class CatService {
     return savedCat;
   }
 
-  async findOne(id: number): Promise<Cat> {
+  async findOne(id: string): Promise<Cat> {
     const cat = await this.catsRepository.findOneOrFail(id);
 
     this.logger.info(`Retrieved cat: ${cat.id}`, {
@@ -64,7 +64,7 @@ export class CatService {
     return cat;
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.findOne(id);
     await this.catsRepository.delete(id);
 
