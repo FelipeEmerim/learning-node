@@ -182,5 +182,17 @@ constructor(
 ## Implementation
 
 This implementation contains two services, user and cats. You must run knex cli command using their respective knexfiles before
-starting the project. We also added some tools like swagger support to make understanding the API easier for a beginner.
+starting the project. 
+
+```bash
+docker-compose run --rm node npm run ts-knex -- --knexfile src/user/database/knexfile.ts migrate:latest
+
+docker-compose run --rm node npm run ts-knex -- --knexfile src/user/database/knexfile.ts seed:run
+
+docker-compose run --rm node npm run ts-knex -- --knexfile src/cat/database/knexfile.ts migrate:latest
+
+docker-compose run --rm node npm run ts-knex -- --knexfile src/user/database/knexfile.ts seed:run
+```
+
+We also added some tools like swagger support to make understanding the API easier for a beginner.
 You can access the docs at localhost:3000/api
