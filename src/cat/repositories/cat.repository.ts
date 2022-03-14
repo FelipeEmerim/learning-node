@@ -17,7 +17,9 @@ export class CatRepository implements Repository<Cat> {
   ) {}
 
   async find(): Promise<Cat[]> {
-    return this.knex<Cat>('cats').select();
+    const cats = await this.knex<Cat>('cats').select();
+
+    return cats;
   }
 
   async findOne(id: string): Promise<Cat | null> {
